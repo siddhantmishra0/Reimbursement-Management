@@ -3,6 +3,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import UserManagement from './pages/admin/UserManagement';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/users" element={<UserManagement />} />
           </Route>
         </Routes>
       </div>
