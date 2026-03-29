@@ -21,6 +21,7 @@ const expenseSchema = new mongoose.Schema({
   currency: { type: String, required: true, default: 'USD' },
 
   convertedAmount: { type: Number },
+  exchangeRate: { type: Number },   // rate stored at submission time for audit
   category: { type: String, required: true },
   description: { type: String, required: true },
   receiptUrl: { type: String },

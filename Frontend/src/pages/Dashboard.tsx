@@ -57,6 +57,18 @@ const Dashboard: React.FC = () => {
             + New Expense
           </Link>
         </div>
+
+        {(userInfo?.role === 'Manager' || userInfo?.role === 'Admin') && (
+          <div className="bg-white p-6 rounded shadow border border-gray-100 flex flex-col items-start justify-between h-full hover:shadow-md transition">
+            <div>
+              <h3 className="text-lg font-bold mb-2 text-gray-800">Approval Queue</h3>
+              <p className="text-gray-500 text-sm mb-4">Review and action pending expense requests from your team.</p>
+            </div>
+            <Link to="/approvals" className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-5 py-2.5 rounded hover:from-amber-600 hover:to-orange-600 transition font-medium shadow-sm w-full text-center">
+              Review Requests
+            </Link>
+          </div>
+        )}
       </div>
 
       {userInfo?.role === 'Admin' && (

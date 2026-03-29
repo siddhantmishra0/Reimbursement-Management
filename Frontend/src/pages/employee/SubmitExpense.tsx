@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { submitExpense } from '../../features/expenses/expenseSlice';
+import type { SubmitExpenseForm } from '../../features/expenses/expenseSlice';
 import { useNavigate } from 'react-router-dom';
 import type { AppDispatch, RootState } from '../../store';
 
@@ -9,7 +10,7 @@ const SubmitExpense: React.FC = () => {
   const navigate = useNavigate();
   const { loading, error } = useSelector((state: RootState) => state.expenses);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Omit<SubmitExpenseForm, 'amount'> & { amount: string }>({
     amount: '',
     currency: 'USD',
     category: 'Travel',
