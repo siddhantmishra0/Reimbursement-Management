@@ -6,6 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import UserManagement from './pages/admin/UserManagement';
 import SubmitExpense from './pages/employee/SubmitExpense';
 import ExpenseHistory from './pages/employee/ExpenseHistory';
+import Approvals from './pages/manager/Approvals';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/users" element={<UserManagement />} />
             <Route path="/submit-expense" element={<SubmitExpense />} />
             <Route path="/my-expenses" element={<ExpenseHistory />} />
+            <Route path="/approvals" element={<Approvals />} />
           </Route>
         </Routes>
       </div>
