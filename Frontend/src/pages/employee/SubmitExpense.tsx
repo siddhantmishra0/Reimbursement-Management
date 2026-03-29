@@ -4,11 +4,13 @@ import { submitExpense } from '../../features/expenses/expenseSlice';
 import type { SubmitExpenseForm } from '../../features/expenses/expenseSlice';
 import { useNavigate } from 'react-router-dom';
 import type { AppDispatch, RootState } from '../../store';
+import axios from 'axios';
 
 const SubmitExpense: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state: RootState) => state.expenses);
+  const { userInfo } = useSelector((state: RootState) => state.auth);
 
   const [formData, setFormData] = useState<Omit<SubmitExpenseForm, 'amount'> & { amount: string }>({
     amount: '',
@@ -18,8 +20,45 @@ const SubmitExpense: React.FC = () => {
     receiptUrl: ''
   });
 
+  const [ocrLoading, setOcrLoading] = useState(false);
+  const [ocrError, setOcrError] = useState('');
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setOcrLoading(true);
+    setOcrError('');
+
+    try {
+      const uploadData = new FormData();
+      uploadData.append('receipt', file);
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo?.token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+
+      const { data } = await axios.post('http://localhost:5000/api/expenses/extract-receipt', uploadData, config);
+      
+      setFormData(prev => ({
+        ...prev,
+        amount: data.amount ? data.amount.toString() : prev.amount,
+        description: data.description ? data.description : prev.description,
+        receiptUrl: data.receiptUrl,
+      }));
+    } catch (err: any) {
+      console.error(err);
+      setOcrError(err.response?.data?.message || 'Failed to scan receipt with OCR.');
+    } finally {
+      setOcrLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -42,7 +81,33 @@ const SubmitExpense: React.FC = () => {
 
       <div className="bg-white p-8 rounded shadow-lg border border-gray-100">
         {error && <div className="bg-red-100 text-red-700 p-3 mb-4 rounded">{error}</div>}
+        {ocrError && <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 p-3 mb-4 rounded">{ocrError}</div>}
         
+        <div className="mb-6 p-4 border-2 border-dashed border-indigo-200 rounded-lg bg-indigo-50/50">
+          <label className="block text-sm font-semibold text-indigo-900 mb-2">Upload Receipt (OCR Auto-fill)</label>
+          <input 
+            type="file" 
+            accept="image/*" 
+            onChange={handleFileUpload} 
+            disabled={ocrLoading}
+            className="block w-full text-sm text-gray-500
+              file:mr-4 file:py-2 file:px-4
+              file:rounded-md file:border-0
+              file:text-sm file:font-semibold
+              file:bg-indigo-600 file:text-white
+              hover:file:bg-indigo-700
+              disabled:opacity-50 transition"
+          />
+          {ocrLoading && <p className="text-sm text-indigo-600 mt-2 flex items-center gap-2">
+            <svg className="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Scanning receipt...
+          </p>}
+          {formData.receiptUrl && !ocrLoading && <p className="text-sm text-green-600 mt-2 font-medium">✓ Receipt uploaded and scanned</p>}
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-2 gap-6">
             <div>
@@ -77,7 +142,7 @@ const SubmitExpense: React.FC = () => {
           </div>
 
           <div className="pt-4">
-            <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-3 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition font-medium shadow shadow-indigo-200 disabled:opacity-50">
+            <button type="submit" disabled={loading || ocrLoading} className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-3 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition font-medium shadow shadow-indigo-200 disabled:opacity-50">
               {loading ? 'Submitting...' : 'Submit Expense'}
             </button>
           </div>

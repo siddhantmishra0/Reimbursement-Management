@@ -40,6 +40,7 @@ const ExpenseHistory: React.FC = () => {
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Description</th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Amount</th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Converted</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Receipt</th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
@@ -69,6 +70,15 @@ const ExpenseHistory: React.FC = () => {
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {exp.receiptUrl ? (
+                        <a href={exp.receiptUrl} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:text-indigo-900 font-medium">
+                          View
+                        </a>
+                      ) : (
+                        <span className="text-gray-400 text-xs">None</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
                         ${exp.status === 'Approved' ? 'bg-green-100 text-green-800 border border-green-200' : 
                           exp.status === 'Rejected' ? 'bg-red-100 text-red-800 border border-red-200' : 'bg-yellow-100 text-yellow-800 border border-yellow-200'}`}>
@@ -78,7 +88,7 @@ const ExpenseHistory: React.FC = () => {
                   </tr>
                 ))}
                 {expenses.length === 0 && (
-                  <tr><td colSpan={6} className="px-6 py-8 text-center text-gray-500">No expenses submitted yet.</td></tr>
+                  <tr><td colSpan={7} className="px-6 py-8 text-center text-gray-500">No expenses submitted yet.</td></tr>
                 )}
               </tbody>
             </table>
