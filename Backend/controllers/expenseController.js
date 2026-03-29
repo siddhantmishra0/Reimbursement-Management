@@ -8,6 +8,10 @@ export const createExpense = async (req, res) => {
   try {
     const { amount, currency, category, description, receiptUrl } = req.body;
 
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ message: 'Amount must be a positive number' });
+    }
+
     const expense = await Expense.create({
       employeeId: req.user._id,
       amount,

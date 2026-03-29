@@ -48,7 +48,12 @@ const ExpenseHistory: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(exp.createdAt).toLocaleDateString()}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{exp.category}</td>
                     <td className="px-6 py-4 text-sm text-gray-500 max-w-xs md:max-w-sm truncate">{exp.description}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{exp.currency} {exp.amount.toFixed(2)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                      {new Intl.NumberFormat(undefined, {
+                        style: 'currency',
+                        currency: exp.currency,
+                      }).format(exp.amount)}
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
                         ${exp.status === 'Approved' ? 'bg-green-100 text-green-800 border border-green-200' : 
