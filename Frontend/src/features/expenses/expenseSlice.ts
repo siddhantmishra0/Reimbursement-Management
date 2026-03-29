@@ -30,9 +30,19 @@ export const fetchMyExpenses = createAsyncThunk('expenses/fetchMyExpenses', asyn
   try {
     const state = thunkAPI.getState() as RootState;
     const token = state.auth.userInfo?.token;
-    const config = { headers: { Authorization: `Bearer ${token}` } };
+    if (!token) {
+      return thunkAPI.rejectWithValue('Authentication required');
+    }
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+      timeout: 10000,
+    };
     const response = await axios.get(`${API_URL}/my`, config);
     return response.data;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
+  }
+});
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
   }
