@@ -1,0 +1,24 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/siddhantmishra0/Reimbursement-Management#readme",
+  "bugs": {
+    "url": "https://github.com/siddhantmishra0/Reimbursement-Management/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/siddhantmishra0/Reimbursement-Management.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
