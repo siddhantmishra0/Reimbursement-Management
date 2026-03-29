@@ -4,6 +4,8 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import UserManagement from './pages/admin/UserManagement';
+import SubmitExpense from './pages/employee/SubmitExpense';
+import ExpenseHistory from './pages/employee/ExpenseHistory';
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/users" element={<UserManagement />} />
+            <Route path="/submit-expense" element={<SubmitExpense />} />
+            <Route path="/my-expenses" element={<ExpenseHistory />} />
           </Route>
         </Routes>
       </div>
