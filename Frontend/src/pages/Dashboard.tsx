@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../store';
 import { logout } from '../features/auth/authSlice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {
   const { userInfo } = useSelector((state: RootState) => state.auth);
@@ -23,7 +23,7 @@ const Dashboard: React.FC = () => {
         </button>
       </div>
       
-      <div className="bg-white p-6 rounded shadow-sm border border-gray-100">
+      <div className="bg-white p-6 rounded shadow-sm border border-gray-100 mb-6">
         <h2 className="text-xl font-semibold mb-2 text-gray-700">Welcome back, {userInfo?.name}!</h2>
         <div className="mt-4 flex gap-4">
           <div className="bg-indigo-50 p-4 rounded text-indigo-800 inline-block border border-indigo-100 shadow-sm">
@@ -36,6 +36,15 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {userInfo?.role === 'Admin' && (
+        <div className="bg-white p-6 rounded shadow-sm border border-gray-100">
+          <h3 className="text-lg font-bold mb-4">Admin Controls</h3>
+          <Link to="/users" className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition inline-block font-medium">
+            Manage Users
+          </Link>
+        </div>
+      )}
     </div>
   );
 };
