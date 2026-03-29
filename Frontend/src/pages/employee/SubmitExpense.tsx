@@ -23,7 +23,10 @@ const SubmitExpense: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const resultAction = await dispatch(submitExpense(formData));
+    const resultAction = await dispatch(submitExpense({
+      ...formData,
+      amount: parseFloat(formData.amount),
+    }));
     if (submitExpense.fulfilled.match(resultAction)) {
       navigate('/my-expenses');
     }

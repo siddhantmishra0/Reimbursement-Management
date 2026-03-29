@@ -14,6 +14,8 @@ interface Expense {
   createdAt: string;
 }
 
+type SubmitExpenseArg = Omit<Expense, '_id' | 'status' | 'createdAt'>;
+
 interface ExpenseState {
   expenses: Expense[];
   loading: boolean;
@@ -26,29 +28,43 @@ const initialState: ExpenseState = {
   error: null,
 };
 
-export const fetchMyExpenses = createAsyncThunk('expenses/fetchMyExpenses', async (_, thunkAPI) => {
-  try {
-    const state = thunkAPI.getState() as RootState;
-    const token = state.auth.userInfo?.token;
-    const config = { headers: { Authorization: `Bearer ${token}` } };
-    const response = await axios.get(`${API_URL}/my`, config);
-    return response.data;
-  } catch (error: any) {
-    return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
+const extractErrorMessage = (error: unknown): string => {
+  if (axios.isAxiosError(error)) {
+    return error.response?.data?.message ?? error.message;
   }
-});
+  if (error instanceof Error) return error.message;
+  return 'An unknown error occurred';
+};
 
-export const submitExpense = createAsyncThunk('expenses/submitExpense', async (expenseData: any, thunkAPI) => {
-  try {
-    const state = thunkAPI.getState() as RootState;
-    const token = state.auth.userInfo?.token;
-    const config = { headers: { Authorization: `Bearer ${token}` } };
-    const response = await axios.post(API_URL, expenseData, config);
-    return response.data;
-  } catch (error: any) {
-    return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
+export const fetchMyExpenses = createAsyncThunk<Expense[], void, { rejectValue: string }>(
+  'expenses/fetchMyExpenses',
+  async (_, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState() as RootState;
+      const token = state.auth.userInfo?.token;
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      const response = await axios.get<Expense[]>(`${API_URL}/my`, config);
+      return response.data;
+    } catch (error: unknown) {
+      return thunkAPI.rejectWithValue(extractErrorMessage(error));
+    }
   }
-});
+);
+
+export const submitExpense = createAsyncThunk<Expense, SubmitExpenseArg, { rejectValue: string }>(
+  'expenses/submitExpense',
+  async (expenseData, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState() as RootState;
+      const token = state.auth.userInfo?.token;
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      const response = await axios.post<Expense>(API_URL, expenseData, config);
+      return response.data;
+    } catch (error: unknown) {
+      return thunkAPI.rejectWithValue(extractErrorMessage(error));
+    }
+  }
+);
 
 const expenseSlice = createSlice({
   name: 'expenses',
@@ -66,7 +82,7 @@ const expenseSlice = createSlice({
       })
       .addCase(fetchMyExpenses.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = action.payload ?? 'Failed to fetch expenses';
       })
       .addCase(submitExpense.pending, (state) => {
         state.loading = true;
@@ -78,7 +94,7 @@ const expenseSlice = createSlice({
       })
       .addCase(submitExpense.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = action.payload ?? 'Failed to submit expense';
       });
   },
 });
