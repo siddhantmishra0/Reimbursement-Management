@@ -12,6 +12,7 @@ export interface Expense {
   exchangeRate?: number;
   category: string;
   description: string;
+  receiptUrl?: string;
   status: 'Pending' | 'Approved' | 'Rejected';
   createdAt: string;
   currentStepIndex: number;
