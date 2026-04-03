@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import type { RootState } from '../../store';
 
-const API_URL = 'http://localhost:5000/api/expenses';
+const API_URL = `${import.meta.env.VITE_BACKEND_URL}/api/expenses`;
 
 export interface Expense {
   _id: string;

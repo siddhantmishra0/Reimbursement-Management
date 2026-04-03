@@ -7,6 +7,7 @@ import UserManagement from './pages/admin/UserManagement';
 import SubmitExpense from './pages/employee/SubmitExpense';
 import ExpenseHistory from './pages/employee/ExpenseHistory';
 import Approvals from './pages/manager/Approvals';
+import Settings from './pages/admin/Settings';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/submit-expense" element={<SubmitExpense />} />
             <Route path="/my-expenses" element={<ExpenseHistory />} />
             <Route path="/approvals" element={<Approvals />} />
+            <Route path="/settings" element={<Settings />} />
           </Route>
         </Routes>
       </div>

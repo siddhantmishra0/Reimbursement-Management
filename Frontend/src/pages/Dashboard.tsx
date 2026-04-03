@@ -72,12 +72,30 @@ const Dashboard: React.FC = () => {
       </div>
 
       {userInfo?.role === 'Admin' && (
-        <div className="bg-white p-6 rounded shadow border border-gray-100 hover:shadow-md transition">
-          <h3 className="text-lg font-bold mb-2 text-gray-800">Admin Controls</h3>
-          <p className="text-gray-500 text-sm mb-4">Manage users and permissions across the platform.</p>
-          <Link to="/users" className="bg-gray-800 text-white px-5 py-2.5 rounded hover:bg-gray-900 transition font-medium shadow-sm inline-block w-full text-center">
-            Manage Users
-          </Link>
+        <div className="bg-white p-6 rounded shadow border border-gray-100 mb-6">
+          <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-700 to-slate-900 mb-4 flex items-center gap-2">
+             Admin Controls
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Link to="/users" className="border border-slate-200 p-4 rounded-xl flex flex-col justify-between hover:bg-slate-50 hover:border-slate-300 transition group shadow-sm">
+              <div>
+                <h4 className="font-bold text-slate-800 transition">User Management</h4>
+                <p className="text-sm text-slate-500 mt-1">Manage employees and roles</p>
+              </div>
+              <div className="mt-4 text-right">
+                <span className="text-slate-600 group-hover:text-slate-900 font-semibold text-sm transition-colors">Manage Users →</span>
+              </div>
+            </Link>
+            <Link to="/settings" className="border border-indigo-100 bg-indigo-50/30 p-4 rounded-xl flex flex-col justify-between hover:bg-indigo-50 hover:border-indigo-200 transition group shadow-sm">
+              <div>
+                <h4 className="font-bold text-indigo-900 transition">System Settings</h4>
+                <p className="text-sm text-indigo-700 mt-1">Configure automated approval workflows</p>
+              </div>
+              <div className="mt-4 text-right">
+                <span className="text-indigo-600 group-hover:text-indigo-800 font-semibold text-sm transition-colors">Workflow Builder →</span>
+              </div>
+            </Link>
+          </div>
         </div>
       )}
     </div>

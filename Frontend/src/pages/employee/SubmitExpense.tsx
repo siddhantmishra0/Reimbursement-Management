@@ -45,7 +45,7 @@ const SubmitExpense: React.FC = () => {
         },
       };
 
-      const { data } = await axios.post('http://localhost:5000/api/expenses/extract-receipt', uploadData, config);
+      const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/expenses/extract-receipt`, uploadData, config);
       
       setFormData(prev => ({
         ...prev,
